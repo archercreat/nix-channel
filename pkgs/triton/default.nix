@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, capstone, z3 }:
+{ lib, stdenv, fetchFromGitHub, cmake, capstone, z3 }:
 
 stdenv.mkDerivation rec {
   version = "dev-1.0";
