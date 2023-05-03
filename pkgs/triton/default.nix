@@ -28,7 +28,7 @@ stdenv.mkDerivation rec {
   ];
 
   meta = with lib; {
-    description = "Triton is a dynamic binary analysis library.";
+    description = "Triton is a dynamic binary analysis library";
     homepage    = "https://github.com/JonathanSalwan/Triton";
   };
 }
