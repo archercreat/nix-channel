@@ -18,7 +18,7 @@ in stdenv.mkDerivation rec {
   };
 
   patches = [
-    "cmake-package.patch"
+    "./cmake-package.patch"
   ];
 
   cmakeFlags = [
