@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bbabbd6..3876db3 100644
+index bbabbd6..dee4a0b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -84,77 +84,62 @@ add_custom_command(OUTPUT "${PROJECT_BINARY_DIR}/tools/alive_lexer.cpp"
@@ -55,7 +55,7 @@ index bbabbd6..3876db3 100644
 +add_library(ir STATIC ${IR_SOURCES})
 +
 +target_include_directories(ir PUBLIC
-+  $<INSTALL_INTERFACE:include/alive>
++  $<INSTALL_INTERFACE:include/alive2>
 +  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
  )
  
@@ -65,7 +65,7 @@ index bbabbd6..3876db3 100644
 -set(TOOLS_SRCS
 -  tools/transform.cpp
 +target_include_directories(smt PUBLIC
-+  $<INSTALL_INTERFACE:include/alive>
++  $<INSTALL_INTERFACE:include/alive2>
 +  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
  )
  
@@ -91,14 +91,14 @@ index bbabbd6..3876db3 100644
 +add_library(tools STATIC "tools/transform.cpp")
 +
 +target_include_directories(tools PUBLIC
-+  $<INSTALL_INTERFACE:include/alive>
++  $<INSTALL_INTERFACE:include/alive2>
 +  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
  )
  
 -add_library(util STATIC ${UTIL_SRCS})
 +add_library(util STATIC ${UTIL_SOURCES})
 +target_include_directories(util PUBLIC
-+  $<INSTALL_INTERFACE:include/alive>
++  $<INSTALL_INTERFACE:include/alive2>
 +  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 +)
 +target_include_directories(util PRIVATE $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>)
@@ -136,7 +136,7 @@ index bbabbd6..3876db3 100644
 -    "llvm_util/utils.cpp"
 +  target_include_directories(llvm_util PRIVATE ${LLVM_INCLUDE_DIRS})
 +  target_include_directories(llvm_util PUBLIC
-+    $<INSTALL_INTERFACE:include/alive>
++    $<INSTALL_INTERFACE:include/alive2>
 +    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
    )
 -
