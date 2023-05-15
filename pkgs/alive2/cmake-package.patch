@@ -195,11 +195,11 @@ index bbabbd6..3876db3 100644
 +    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/alive2Config.cmake"
 +  DESTINATION lib/cmake/alive2
 +)
-diff --git a/cmake/aliveConfig.cmake b/cmake/aliveConfig.cmake
+diff --git a/cmake/alive2Config.cmake b/cmake/alive2Config.cmake
 new file mode 100644
 index 0000000..2f349af
 --- /dev/null
-+++ b/cmake/aliveConfig.cmake
++++ b/cmake/alive2Config.cmake
 @@ -0,0 +1,2 @@
 +include(CMakeFindDependencyMacro)
 +include("${CMAKE_CURRENT_LIST_DIR}/aliveTargets.cmake")
