@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bbabbd6..1eeae01 100644
+index bbabbd6..3876db3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -84,77 +84,62 @@ add_custom_command(OUTPUT "${PROJECT_BINARY_DIR}/tools/alive_lexer.cpp"
@@ -162,8 +162,8 @@ index bbabbd6..1eeae01 100644
 +
 +install(
 +  EXPORT aliveTargets
-+  NAMESPACE alive::
-+  DESTINATION lib/cmake/alive
++  NAMESPACE alive2::
++  DESTINATION lib/cmake/alive2
 +)
 +
 +install(
@@ -174,10 +174,10 @@ index bbabbd6..1eeae01 100644
 +  ARCHIVE DESTINATION lib
 +)
 +
-+install(FILES ${IR_INCLUDES}    DESTINATION "include/alive/ir")
-+install(FILES ${SMT_INCLUDES}   DESTINATION "include/alive/smt")
-+install(FILES ${TOOLS_INCLUDES} DESTINATION "include/alive/tools")
-+install(FILES ${UTIL_INCLUDES}  DESTINATION "include/alive/util")
++install(FILES ${IR_INCLUDES}    DESTINATION "include/alive2/ir")
++install(FILES ${SMT_INCLUDES}   DESTINATION "include/alive2/smt")
++install(FILES ${TOOLS_INCLUDES} DESTINATION "include/alive2/tools")
++install(FILES ${UTIL_INCLUDES}  DESTINATION "include/alive2/util")
 +
 +if(TARGET llvm_util)
 +  install(
@@ -187,21 +187,19 @@ index bbabbd6..1eeae01 100644
 +    LIBRARY DESTINATION lib
 +    ARCHIVE DESTINATION lib
 +  )
-+  install(FILES ${LLVM_UTIL_INCLUDES} DESTINATION "include/alive/llvm_util")
++  install(FILES ${LLVM_UTIL_INCLUDES} DESTINATION "include/alive2/llvm_util")
 +endif()
 +
 +install(
 +  FILES
-+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/aliveConfig.cmake"
-+  DESTINATION lib/cmake/alive
++    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/alive2Config.cmake"
++  DESTINATION lib/cmake/alive2
 +)
-\ No newline at end of file
 diff --git a/cmake/aliveConfig.cmake b/cmake/aliveConfig.cmake
 new file mode 100644
-index 0000000..ab88c57
+index 0000000..2f349af
 --- /dev/null
 +++ b/cmake/aliveConfig.cmake
 @@ -0,0 +1,2 @@
 +include(CMakeFindDependencyMacro)
 +include("${CMAKE_CURRENT_LIST_DIR}/aliveTargets.cmake")
-\ No newline at end of file
