@@ -19,6 +19,7 @@ in stdenv.mkDerivation rec {
 
   patches = [
     ./cmake-package.patch
+    ./cmake-remove-git.patch
   ];
 
   cmakeFlags = [

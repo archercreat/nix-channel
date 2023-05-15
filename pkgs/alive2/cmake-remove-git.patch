@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ce7461f..6e29826 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -47,11 +47,10 @@ if (CYGWIN)
+   set(CMAKE_FIND_LIBRARY_SUFFIXES ".dll")
+ endif()
+ 
+-find_package(Git REQUIRED)
+ add_custom_command(
+   OUTPUT "${PROJECT_BINARY_DIR}/version_gen.h.tmp"
+   COMMAND "${CMAKE_COMMAND}" -E echo_append "#define ALIVE_VERSION_MACRO " > "${PROJECT_BINARY_DIR}/version_gen.h.tmp"
+-  COMMAND "${GIT_EXECUTABLE}" describe --tags --dirty --always >> "${PROJECT_BINARY_DIR}/version_gen.h.tmp"
++  COMMAND "echo" "master-nix" >> "${PROJECT_BINARY_DIR}/version_gen.h.tmp"
+   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+   VERBATIM
+ )
