@@ -33,7 +33,7 @@ in stdenv.mkDerivation rec {
 
   buildInputs = [
     re2c
-    llvm_16
+    llvm
     z3
   ];
 }
