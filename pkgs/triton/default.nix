@@ -2,7 +2,7 @@
 
 stdenv.mkDerivation rec {
   version = "dev-1.0";
-  name = "triton-${version}";
+  name    = "triton-${version}";
 
   src = fetchFromGitHub {
     owner  = "JonathanSalwan";

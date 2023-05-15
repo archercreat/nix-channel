@@ -1,0 +1,207 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bbabbd6..1eeae01 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -84,77 +84,62 @@ add_custom_command(OUTPUT "${PROJECT_BINARY_DIR}/tools/alive_lexer.cpp"
+                    COMMAND ${RE2C} ARGS "-d" "-b" "-T" "--no-generation-date"
+                    "-o" "${PROJECT_BINARY_DIR}/tools/alive_lexer.cpp"
+                    "${PROJECT_SOURCE_DIR}/tools/alive_lexer.re"
+-                   DEPENDS "tools/alive_lexer.re")
+-
+-include_directories(${PROJECT_SOURCE_DIR})
+-include_directories(${PROJECT_BINARY_DIR})
+-
+-set(IR_SRCS
+-  ir/attrs.cpp
+-  ir/constant.cpp
+-  ir/fast_math.cpp
+-  ir/function.cpp
+-  ir/globals.cpp
+-  ir/instr.cpp
+-  ir/memory.cpp
+-  ir/pointer.cpp
+-  ir/precondition.cpp
+-  ir/state.cpp
+-  ir/state_value.cpp
+-  ir/type.cpp
+-  ir/value.cpp
++                   DEPENDS "tools/alive_lexer.re"
+ )
+ 
+-add_library(ir STATIC ${IR_SRCS})
+ 
+-set(SMT_SRCS
+-  smt/ctx.cpp
+-  smt/expr.cpp
+-  smt/exprs.cpp
+-  smt/smt.cpp
+-  smt/solver.cpp
++file(GLOB_RECURSE IR_SOURCES  CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/ir/*.cpp")
++file(GLOB_RECURSE IR_INCLUDES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/ir/*.h")
++
++file(GLOB_RECURSE SMT_SOURCES  CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/smt/*.cpp")
++file(GLOB_RECURSE SMT_INCLUDES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/smt/*.h")
++
++file(GLOB_RECURSE TOOLS_INCLUDES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/*.h")
++
++file(GLOB_RECURSE UTIL_SOURCES  CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/util/*.cpp")
++file(GLOB_RECURSE UTIL_INCLUDES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/util/*.h")
++
++file(GLOB_RECURSE CACHE_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/cache/*.cpp")
++
++file(GLOB_RECURSE LLVM_UTIL_SOURCES  CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/llvm_util/*.cpp")
++file(GLOB_RECURSE LLVM_UTIL_INCLUDES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/llvm_util/*.h")
++
++add_library(ir STATIC ${IR_SOURCES})
++
++target_include_directories(ir PUBLIC
++  $<INSTALL_INTERFACE:include/alive>
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+ )
+ 
+-add_library(smt STATIC ${SMT_SRCS})
++add_library(smt STATIC ${SMT_SOURCES})
+ 
+-set(TOOLS_SRCS
+-  tools/transform.cpp
++target_include_directories(smt PUBLIC
++  $<INSTALL_INTERFACE:include/alive>
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+ )
+ 
+-add_library(tools STATIC ${TOOLS_SRCS})
+-
+-set(UTIL_SRCS
+-  "${PROJECT_BINARY_DIR}/version_gen.h"
+-  util/compiler.cpp
+-  util/config.cpp
+-  util/crc.cpp
+-  util/errors.cpp
+-  util/file.cpp
+-  util/parallel.cpp
+-  util/parallel_fifo.cpp
+-  util/parallel_null.cpp
+-  util/parallel_unrestricted.cpp
+-  util/random.cpp
+-  util/sort.cpp
+-  util/stopwatch.cpp
+-  util/symexec.cpp
+-  util/unionfind.cpp
+-  util/version.cpp
++add_library(tools STATIC "tools/transform.cpp")
++
++target_include_directories(tools PUBLIC
++  $<INSTALL_INTERFACE:include/alive>
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+ )
+ 
+-add_library(util STATIC ${UTIL_SRCS})
++add_library(util STATIC ${UTIL_SOURCES})
++target_include_directories(util PUBLIC
++  $<INSTALL_INTERFACE:include/alive>
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
++)
++target_include_directories(util PRIVATE $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>)
+ add_dependencies(util generate_version)
+ 
+ set(ALIVE_LIBS ir smt tools util)
+ 
+ find_package(hiredis)
+ if (HIREDIS_LIBRARIES)
+-  include_directories(${HIREDIS_INCLUDE_DIR})
+-
+-  set(CACHE_SRCS
+-    cache/cache.cpp
+-  )
+-  add_library(cache STATIC ${CACHE_SRCS})
++  add_library(cache STATIC ${CACHE_SOURCES})
++  target_include_directories(cache PRIVATE ${HIREDIS_INCLUDE_DIR})
++  target_include_directories(cache PUBLIC ${PROJECT_SOURCE_DIR})
+   set(ALIVE_LIBS cache ${ALIVE_LIBS})
+ else()
+   set(HIREDIS_LIBRARIES $<0:''>)
+@@ -179,18 +164,14 @@ if (BUILD_LLVM_UTILS OR BUILD_TV)
+   list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
+   include(AddLLVM)
+ 
+-  include_directories(${LLVM_INCLUDE_DIRS})
+-  add_definitions(${LLVM_DEFINITIONS})
++  add_library(llvm_util STATIC ${LLVM_UTIL_SOURCES})
+ 
+-  set(LLVM_UTIL_SRCS
+-    "llvm_util/compare.cpp"
+-    "llvm_util/known_fns.cpp"
+-    "llvm_util/llvm_optimizer.cpp"
+-    "llvm_util/llvm2alive.cpp"
+-    "llvm_util/utils.cpp"
++  target_include_directories(llvm_util PRIVATE ${LLVM_INCLUDE_DIRS})
++  target_include_directories(llvm_util PUBLIC
++    $<INSTALL_INTERFACE:include/alive>
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+   )
+-
+-  add_library(llvm_util STATIC ${LLVM_UTIL_SRCS})
++  add_definitions(${LLVM_DEFINITIONS})
+   set(ALIVE_LIBS_LLVM llvm_util ${ALIVE_LIBS})
+ 
+   set(LLVM_LINK_COMPONENTS ${LLVM_LINK_COMPONENTS} TargetParser)
+@@ -206,9 +187,6 @@ if (BUILD_LLVM_UTILS OR BUILD_TV)
+   add_llvm_executable(alive-exec
+     "tools/alive-exec.cpp"
+   )
+-
+-else()
+-  set(LLVM_UTIL_SRCS "")
+ endif()
+ 
+ if (BUILD_TV)
+@@ -277,3 +255,39 @@ add_custom_target("check"
+ if (BUILD_TV)
+   add_dependencies("check" "alive-tv" "quick-fuzz" "tv")
+ endif()
++
++install(
++  EXPORT aliveTargets
++  NAMESPACE alive::
++  DESTINATION lib/cmake/alive
++)
++
++install(
++  TARGETS ir smt tools util alive alive-jobserver
++  EXPORT aliveTargets
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
++
++install(FILES ${IR_INCLUDES}    DESTINATION "include/alive/ir")
++install(FILES ${SMT_INCLUDES}   DESTINATION "include/alive/smt")
++install(FILES ${TOOLS_INCLUDES} DESTINATION "include/alive/tools")
++install(FILES ${UTIL_INCLUDES}  DESTINATION "include/alive/util")
++
++if(TARGET llvm_util)
++  install(
++    TARGETS llvm_util alive-tv alive-exec quick-fuzz
++    EXPORT aliveTargets
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
++  )
++  install(FILES ${LLVM_UTIL_INCLUDES} DESTINATION "include/alive/llvm_util")
++endif()
++
++install(
++  FILES
++    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/aliveConfig.cmake"
++  DESTINATION lib/cmake/alive
++)
+\ No newline at end of file
+diff --git a/cmake/aliveConfig.cmake b/cmake/aliveConfig.cmake
+new file mode 100644
+index 0000000..ab88c57
+--- /dev/null
++++ b/cmake/aliveConfig.cmake
+@@ -0,0 +1,2 @@
++include(CMakeFindDependencyMacro)
++include("${CMAKE_CURRENT_LIST_DIR}/aliveTargets.cmake")
+\ No newline at end of file
