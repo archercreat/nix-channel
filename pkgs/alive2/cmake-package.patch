@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bbabbd6..dee4a0b 100644
+index bbabbd6..6c5eaa6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -84,77 +84,62 @@ add_custom_command(OUTPUT "${PROJECT_BINARY_DIR}/tools/alive_lexer.cpp"
@@ -161,14 +161,14 @@ index bbabbd6..dee4a0b 100644
  endif()
 +
 +install(
-+  EXPORT aliveTargets
++  EXPORT alive2Targets
 +  NAMESPACE alive2::
 +  DESTINATION lib/cmake/alive2
 +)
 +
 +install(
 +  TARGETS ir smt tools util alive alive-jobserver
-+  EXPORT aliveTargets
++  EXPORT alive2Targets
 +  RUNTIME DESTINATION bin
 +  LIBRARY DESTINATION lib
 +  ARCHIVE DESTINATION lib
@@ -182,7 +182,7 @@ index bbabbd6..dee4a0b 100644
 +if(TARGET llvm_util)
 +  install(
 +    TARGETS llvm_util alive-tv alive-exec quick-fuzz
-+    EXPORT aliveTargets
++    EXPORT alive2Targets
 +    RUNTIME DESTINATION bin
 +    LIBRARY DESTINATION lib
 +    ARCHIVE DESTINATION lib
