@@ -36,4 +36,9 @@ in stdenv.mkDerivation rec {
     llvm
     z3
   ];
+
+  meta = with lib; {
+    description = "Automatic verification of LLVM optimizations";
+    homepage    = "https://github.com/AliveToolkit/alive2";
+  };
 }
