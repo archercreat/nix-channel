@@ -14,7 +14,7 @@ in stdenv.mkDerivation rec {
     owner  = "AliveToolkit";
     repo   = "alive2";
     rev    = "fae975049342fb81940d427d8575e291595733f6";
-    sha256 = "";
+    sha256 = "sha256-erJirxsDPIzOosYtdA+EmrYbGMuh1+jTrTUCYOsFc5s=";
   };
 
   patches = [
